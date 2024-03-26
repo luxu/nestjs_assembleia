@@ -1,7 +1,16 @@
-import { Controller, Res, Get, Post, Put, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Res,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UsuarioService } from './usuario.service';
-import { User } from './user/user';
+import { User, UserUpdatingRequest } from './user/user';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -30,7 +39,7 @@ export class UsuarioController {
   @Put('/:id')
   update(
     @Param('id') id: number,
-    @Body() userUpdateData: User,
+    @Body() userUpdateData: UserUpdatingRequest,
     @Res() response: Response,
   ) {
     const user = this.service.findById(id);
@@ -41,5 +50,14 @@ export class UsuarioController {
     return response
       .status(204)
       .send(`Usuário: ${id}-${userUpdateData.name} atualizado com sucesso`);
+  }
+  @Delete('/:id')
+  delete(@Param('id') id: number, @Res() response: Response) {
+    const user = this.service.findById(id);
+    if (!user) {
+      return response.status(404).send();
+    }
+    this.service.delete(id);
+    return response.status(204).send();
   }
 }

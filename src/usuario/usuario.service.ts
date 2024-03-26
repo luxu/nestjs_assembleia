@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './user/user';
+import { User, UserUpdatingRequest } from './user/user';
 
 @Injectable()
 export class UsuarioService {
@@ -15,12 +15,16 @@ export class UsuarioService {
   save(user: User) {
     this.users.push(user);
   }
-  update(id: number, userUpdateData: User) {
-    this.user.forEach((user) => {
+
+  update(id: number, userUpdateData: UserUpdatingRequest) {
+    this.users.forEach((user) => {
       if (user.id === id) {
         user.name = userUpdateData.name;
         user.email = userUpdateData.email;
       }
     });
+  }
+  delete(id: number) {
+    this.users = this.users.filter((user) => user.id != id);
   }
 }
